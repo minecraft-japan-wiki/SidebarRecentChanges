@@ -12,17 +12,10 @@
  * https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en
  */
 
-const i18n = {
-    'recent_changes': '最近の更新',
-    'just_now': 'たった今',
-    'no_update': '更新はありません'
-};
 
-/**********
- * Menu Template
- *  再更新時にエレメントを参照できるようにclassにsidebar-resentchangesを必ず入れること
- */
+/* template */
 const templates = {
+    // 再更新時にエレメントを参照できるようにclassにsidebar-resentchangesを必ず入れること
     "vector": {
         target: "#mw-panel",
         menu:
@@ -72,25 +65,33 @@ const templates = {
     }
 };
 
-/***********
- * 設定
- */
+/* 設定 */
 const delay = 300000; //再更新までの遅延: 5分
-var lastExecutedTime = 0;
+let lastExecutedTime = 0;
 
-/***********
- * main
-*/
-$(function () {
+/* main */
+mw.loader.using(['site', 'mediawiki.api', 'mediawiki.jqueryMsg']).then(function () {
+    return new mw.Api().getMessages([
+        'sidebar-recent-changes-recent',
+        'sidebar-recent-changes-now',
+        'sidebar-recent-changes-none',
+    ])
+}).then(function (msg) {
+    return {
+        recent_changes: msg["sidebar-recent-changes-recent"],
+        just_now: msg["sidebar-recent-changes-now"],
+        no_update: msg["sidebar-recent-changes-none"],
+    };
+}).then(function (i18n) {
+    append(i18n);
 
-    append();
-
-    lastExecutedTime = Date.now(); // 現在の時刻を記録
+    // 現在の時刻を記録
+    lastExecutedTime = Date.now();
 
     //ブラウザのタブがアクティブになったとき発火するイベントを登録
     document.addEventListener("visibilitychange", onTabActivatedHandler);
-
 });
+
 
 // タブがアクティブになった時に実行する処理
 function onTabActivatedHandler() {
@@ -101,22 +102,23 @@ function onTabActivatedHandler() {
 
         append();
 
-        lastExecutedTime = currentTime; // 実行時間を更新
+        // 実行時間を更新
+        lastExecutedTime = currentTime;
     }
 }
 
 // 更新履歴を追加する処理
-function append() {
+function append(i18n) {
     /* get template */
-    var template = templates[mw.config.get('skin')];
+    const template = templates[mw.config.get('skin')];
     if (!template) return;
 
     var $target = $(template.target);
 
     /* request */
     if ($target.length == 1) {
-        var rootpath = mw.config.get('wgScriptPath');
-        var articlePath = mw.config.get('wgArticlePath');
+        const rootpath = mw.config.get('wgScriptPath');
+        const articlePath = mw.config.get('wgArticlePath');
 
         $.ajax({
             url: rootpath + "/api.php",
@@ -144,7 +146,7 @@ function append() {
                     var args = {
                         pagename: title.textContent,
                         link: encodeURI(title.textContent.replaceAll(" ", "_")).replace(/^(.*)$/, articlePath),
-                        timeago: fromNow(new Date(pubDate.textContent)),
+                        timeago: fromNow(new Date(pubDate.textContent), i18n),
                     };
                     lines.push(
                         replacer(template.content, args)
@@ -185,7 +187,7 @@ function append() {
 }
 
 // 現在時刻からの差をローカル言語で返す
-function fromNow(date) {
+function fromNow(date, i18n) {
     const nowDate = Date.now();
     const rft = new Intl.RelativeTimeFormat('ja', { numeric: "auto" });
     const SECOND = 1000;
@@ -225,7 +227,21 @@ function replacer(template, fields) {
     for (var i = 0; i < keys.length; i++) {
         var key = keys[i];
         var pattern = '(\\$\\{' + key + '\\})';
-        output = output.replaceAll(new RegExp(pattern, "g"), fields[key]);
+        output = output.replaceAll(new RegExp(pattern, "g"), escapeHtml(fields[key]));
     }
     return output;
+}
+
+//文字列をHTMLエスケープ
+function escapeHtml(str) {
+    return str.replace(/[&'`"<>]/g, function (match) {
+        return {
+            '&': '&amp;',
+            "'": '&#x27;',
+            '`': '&#x60;',
+            '"': '&quot;',
+            '<': '&lt;',
+            '>': '&gt;',
+        }[match]
+    });
 }
