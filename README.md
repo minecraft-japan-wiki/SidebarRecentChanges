@@ -11,7 +11,7 @@
 
 # Gadget-sidebarRecentChanges
 
-ページ上にスプライトを表示するための MediaWiki 用ガジェット（Gadget）。
+サイドバー上に「最近の更新」を表示するための MediaWiki 用ガジェット（Gadget）。
 
 ## 概要
 
