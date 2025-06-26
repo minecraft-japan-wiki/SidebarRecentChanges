@@ -33,7 +33,7 @@
 ```js
 // URLを指定してスクリプトを読み込む
 mw.loader.load(
-    '//minecraftjapan.miraheze.org/w/index.php?title=MediaWiki:Gadget-JSprite.js&action=raw&ctype=text/javascript'
+    '//minecraftjapan.miraheze.org/w/index.php?title=MediaWiki:Gadget-sidebarRecentChanges.js&action=raw&ctype=text/javascript'
 );
 ```
 
@@ -44,7 +44,7 @@ mw.loader.load(
 
 ## コントリビューター
 
-_Wiki ページの[編集履歴](https://minecraftjapan.miraheze.org/wiki/MediaWiki:Gadget-JSprite.js?action=history)もご確認ください。_
+_Wiki ページの[編集履歴](https://minecraftjapan.miraheze.org/wiki/MediaWiki:Gadget-SidebarRecentChanges.js?action=history)もご確認ください。_
 
 -   [Urushibara](https://github.com/Urushibara) - [`User:Pneuma`](https://minecraftjapan.miraheze.org/wiki/User:Pneuma)
 -   [shumm7](https://github.com/shumm7) - [`User:Shulmj`](https://minecraftjapan.miraheze.org/wiki/User:Shulmj)
