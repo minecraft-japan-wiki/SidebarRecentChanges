@@ -33,7 +33,7 @@ Or you can use scripts placed on other pages by loading them from `common.js`.
 ```js
 // Load a script by specifying a page URL
 mw.loader.load(
-    '//minecraftjapan.miraheze.org/w/index.php?title=MediaWiki:Gadget-JSprite.js&action=raw&ctype=text/javascript'
+    '//minecraftjapan.miraheze.org/w/index.php?title=MediaWiki:Gadget-sidebarRecentChanges.js&action=raw&ctype=text/javascript'
 );
 ```
 
