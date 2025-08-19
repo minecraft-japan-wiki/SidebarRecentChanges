@@ -227,21 +227,7 @@ function replacer(template, fields) {
     for (var i = 0; i < keys.length; i++) {
         var key = keys[i];
         var pattern = '(\\$\\{' + key + '\\})';
-        output = output.replaceAll(new RegExp(pattern, "g"), escapeHtml(fields[key]));
+        output = output.replaceAll(new RegExp(pattern, "g"), fields[key]);
     }
     return output;
-}
-
-//文字列をHTMLエスケープ
-function escapeHtml(str) {
-    return str.replace(/[&'`"<>]/g, function (match) {
-        return {
-            '&': '&amp;',
-            "'": '&#x27;',
-            '`': '&#x60;',
-            '"': '&quot;',
-            '<': '&lt;',
-            '>': '&gt;',
-        }[match]
-    });
 }
